@@ -75,7 +75,6 @@ html, body { margin: 0; padding: 0; font-family: var(--font); background: var(--
 .intro-inner { display: flex; flex-direction: column; align-items: center; text-align: center; }
 .intro-inner h1 { font-size: 36px; font-weight: 700; line-height: 1.25; color: var(--dark); }
 .intro-inner h1 span { color: var(--red); }
-.intro-inner p { font-size: 15px; color: var(--grey); margin-top: 10px; line-height: 1.55; max-width: 500px; }
 .start-btn {
   margin-top: 28px; padding: 12px 36px;
   background: var(--red); color: #fff; border: none; border-radius: 4px;
@@ -84,12 +83,8 @@ html, body { margin: 0; padding: 0; font-family: var(--font); background: var(--
 }
 .start-btn:hover { background: #b02222; }
 
-
-
 /* Region slide */
-.region-eyebrow { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--grey); font-weight: 600; margin-bottom: 5px; }
-.region-name { font-size: 28px; font-weight: 700; color: var(--dark); line-height: 1.15; margin-bottom: 3px; }
-.region-sub { font-size: 13px; color: var(--grey); margin-bottom: 22px; }
+.region-name { font-size: 28px; font-weight: 700; color: var(--dark); line-height: 1.15; margin-bottom: 22px; }
 
 .legend { display: flex; gap: 18px; margin-bottom: 16px; }
 .leg-item { display: flex; align-items: center; gap: 7px; font-size: 12px; color: var(--grey); font-weight: 500; }
@@ -114,7 +109,6 @@ html, body { margin: 0; padding: 0; font-family: var(--font); background: var(--
   opacity: 0;
 }
 
-
 .case-sentence {
   font-size: 13px; color: var(--dark); line-height: 1.6;
   margin-top: 16px; margin-bottom: 6px; max-width: 620px; font-weight: 500;
@@ -122,10 +116,15 @@ html, body { margin: 0; padding: 0; font-family: var(--font); background: var(--
 
 .note { font-size: 12px; color: var(--grey); line-height: 1.55; max-width: 620px; margin-top: 4px; }
 
-
 .src {
   position: absolute; bottom: 36px; left: 64px; right: 64px;
   font-size: 11px; color: var(--grey);
+}
+
+/* Final methodology slide */
+.methodology-text {
+  font-size: 13px; color: var(--grey); line-height: 1.75; max-width: 680px;
+  margin: 0 auto; text-align: left;
 }
 
 @media (max-width: 640px) {
@@ -146,11 +145,11 @@ html, body { margin: 0; padding: 0; font-family: var(--font); background: var(--
 
 <script>
 const REGIONS = [
-  { name:'Middle East & North Africa', sub:'IDF MENA region · 21 countries', p24:17.6, p50:22.8, cases:'85 million people in the region have diabetes today. That number is projected to reach 163 million by 2050.', note:'The highest prevalence of any IDF region, and the second highest projected increase in cases by 2050.' },
-  { name:'Western Pacific', sub:'IDF WP region · 37 countries including China, Australia, Indonesia', p24:12.4, p50:14.7, cases:'215 million people in the region have diabetes today – more than any other IDF region. That number is projected to reach 254 million by 2050.', note:'' },
-  { name:'South-East Asia', sub:'IDF SEA region · 7 countries including India, Bangladesh, Sri Lanka', p24:9.7, p50:13.2, cases:'107 million people in the region have diabetes today. That number is projected to reach 185 million by 2050.', note:'The IDF SEA region is narrower than commonly understood – Indonesia, Thailand and Vietnam are classified in the Western Pacific region.' },
-  { name:'South & Central America', sub:'IDF SACA region · 19 countries and territories', p24:10.0, p50:12.3, cases:'35 million people in the region have diabetes today. That number is projected to reach 52 million by 2050.', note:'' },
-  { name:'Africa', sub:'IDF AFR region · 49 sub-Saharan countries and territories', p24:5.0, p50:5.9, cases:'25 million people in the region have diabetes today. That number is projected to reach 60 million by 2050 – the fastest rate of increase of any IDF region.', note:'Over 70% of cases are currently undiagnosed.' }
+  { name:'Middle East & North Africa', firstRegion: true, p24:17.6, p50:22.8, cases:'The highest prevalence of any IDF region. 85 million people live with diabetes, projected to rise to 163 million by 2050.', note:'' },
+  { name:'Western Pacific', p24:12.4, p50:14.7, cases:'215 million people live with diabetes in the Western Pacific IDF region – more than any other. Projected to reach 254 million by 2050.', note:'' },
+  { name:'South-East Asia', p24:9.7, p50:13.2, cases:'107 million people live with diabetes in the South-East Asia IDF region, projected to reach 185 million by 2050.', note:'' },
+  { name:'South & Central America', p24:10.0, p50:12.3, cases:'35 million people live with diabetes in South & Central America, projected to reach 52 million by 2050.', note:'' },
+  { name:'Africa', p24:5.0, p50:5.9, cases:'25 million people live with diabetes in the Africa IDF region, projected to reach 60 million by 2050 – the fastest rate of growth of any IDF region. Over 70% of cases are currently undiagnosed.', note:'' }
 ];
 
 const MAX = 26;
@@ -164,17 +163,15 @@ const arrR = document.getElementById('arr-r');
 const widget = document.getElementById('widget');
 let cur = 0, busy = false;
 
-/* Build intro */
+/* Build intro — no source line */
 (function() {
   const s = document.createElement('div');
   s.className = 'slide';
   s.innerHTML = `
     <div class="intro-inner">
-      <h1>Diabetes by region:<br><span>2024 and the road to 2050</span></h1>
-      <p>How does each part of the world compare today – and where is the epidemic heading?</p>
+      <h1>Diabetes by region:<br><span>the road to 2050</span></h1>
       <button class="start-btn" id="start-btn">See the data ›</button>
-    </div>
-    <div class="src">Source: IDF Diabetes Atlas, 11th edition, 2025</div>`;
+    </div>`;
   track.appendChild(s);
   s.querySelector('#start-btn').addEventListener('click', () => go(1));
 })();
@@ -187,12 +184,13 @@ REGIONS.forEach(function(r, i) {
   const w24 = (r.p24 / MAX * 100).toFixed(2);
   const w50 = (r.p50 / MAX * 100).toFixed(2);
 
+  const srcLine = r.firstRegion
+    ? `Source: International Diabetes Federation (IDF) Diabetes Atlas, 11th edition, 2025`
+    : `Source: IDF Diabetes Atlas, 11th edition, 2025`;
 
   s.innerHTML = `
     <div class="slide-content">
-      <div class="region-eyebrow">Region ${i+1} of ${REGIONS.length}</div>
       <div class="region-name">${r.name}</div>
-      <div class="region-sub">${r.sub}</div>
 
       <div class="legend">
         <div class="leg-item"><div class="leg-swatch leg-2024"></div>2024 prevalence</div>
@@ -218,17 +216,19 @@ REGIONS.forEach(function(r, i) {
       <div class="case-sentence">${r.cases}</div>
       ${r.note ? `<div class="note">${r.note}</div>` : ''}
     </div>
-    <div class="src">Source: IDF Diabetes Atlas, 11th edition, 2025</div>`;
+    <div class="src">${srcLine}</div>`;
 
   track.appendChild(s);
 });
 
-/* Footnote slide */
+/* Methodology / footnote slide — larger text */
 (function() {
   const s = document.createElement('div');
   s.className = 'slide';
   s.innerHTML = `
-    <div class="src" style="font-size:11px;line-height:1.65;">Prevalence figures show the share of adults aged 20–79 with diabetes, diagnosed and undiagnosed. All figures are from the IDF Diabetes Atlas, 11th edition (2025), which covers 215 countries using data from studies conducted between 2005 and 2024. Five of the seven IDF regions are shown – those for which the Atlas publishes both a 2024 prevalence figure and a projected 2050 prevalence figure. Europe and North America &amp; Caribbean are excluded as the Atlas publishes projected case counts for these regions but not projected prevalence percentages, making a like-for-like comparison with the other regions impossible.</div>`;
+    <div class="slide-content">
+      <p class="methodology-text">Prevalence figures show the share of adults aged 20–79 with diabetes, diagnosed and undiagnosed. All figures are from the IDF Diabetes Atlas, 11th edition (2025), which covers 215 countries using data from studies conducted between 2005 and 2024. Five of the seven IDF regions are shown – those for which the Atlas publishes both a 2024 prevalence figure and a projected 2050 prevalence figure. Europe and North America &amp; Caribbean are excluded as the Atlas publishes projected case counts for these regions but not projected prevalence percentages, making a like-for-like comparison with the other regions impossible.</p>
+    </div>`;
   track.appendChild(s);
 })();
 
@@ -259,7 +259,6 @@ function animateBars(slideEl) {
   fills.forEach(function(f){ f.style.transition = 'none'; f.style.width = '0%'; });
   pcts.forEach(function(p){ p.style.opacity = '0'; p.style.transition = 'none'; });
 
-  /* 2024 bar */
   setTimeout(function() {
     fills[0].style.transition = 'width 0.85s cubic-bezier(0.4,0,0.2,1)';
     fills[0].style.width = fills[0].dataset.w + '%';
@@ -269,7 +268,6 @@ function animateBars(slideEl) {
     }, 750);
   }, 100);
 
-  /* 2050 bar – starts after 2024 finishes */
   setTimeout(function() {
     fills[1].style.transition = 'width 0.85s cubic-bezier(0.4,0,0.2,1)';
     fills[1].style.width = fills[1].dataset.w + '%';
