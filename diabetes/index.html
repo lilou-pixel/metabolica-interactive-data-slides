@@ -328,7 +328,7 @@ COUNTRIES.forEach((c, idx) => {
   let svgInner, srcNote;
   if (c.islands) {
     svgInner = buildIslandSVG(c.name, si);
-    srcNote = 'Source: IDF Diabetes Atlas, 11th edition (2025) – age-standardised prevalence, adults 20–79. Figures for this territory are extrapolated estimates.';
+    srcNote = 'Source: IDF Diabetes Atlas, 11th edition (2025) – age-standardised prevalence, adults 20–79.';
     slide.innerHTML = `<div class="country-slide"><div class="country-map"><svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">${svgInner}</svg></div><div class="country-info"><div class="country-rank-name"><em>${c.rank}.</em> ${c.name}</div><div class="bottle-pct" id="pct-${si}">0%</div><div class="bottle-wrap"><div class="bottle-track"><div class="bottle-fill" id="bar-${si}"></div></div></div></div></div><div class="slide-src">${srcNote}</div>`;
   } else {
     svgInner = `<defs><clipPath id="clip-${si}"><path d="${c.path}"/></clipPath></defs><path d="${c.path}" fill="#C8F5C8" stroke="rgba(0,0,0,0.18)" stroke-width="0.9"/><rect id="fill-${si}" x="0" y="100" width="100" height="0" fill="#D42B2B" opacity="0.85" clip-path="url(#clip-${si})"/><path d="${c.path}" fill="none" stroke="rgba(0,0,0,0.25)" stroke-width="0.9"/>`;
@@ -346,7 +346,7 @@ COUNTRIES.forEach((c, idx) => {
   slide.innerHTML = `
     <h2 style="font-size:clamp(11px,1.5vw,13px);font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#888;margin-bottom:16px;">Methodology</h2>
     <div style="max-width:520px;font-size:clamp(12px,1.6vw,13px);line-height:1.8;color:#777;display:flex;flex-direction:column;gap:10px;">
-      <p><strong style="color:#666;">Data.</strong> Figures are from the IDF Diabetes Atlas, 11th edition (2025), Table 3.5 – age-standardised prevalence, adults 20–79, estimated for 2024. Figures for Marshall Islands, Samoa, Kiribati and French Polynesia are extrapolated estimates.</p>
+      <p><strong style="color:#666;">Data.</strong> Figures are from the IDF Diabetes Atlas, 11th edition (2025), Table 3.5 – age-standardised prevalence, adults 20–79, estimated for 2024.</p>
       <p><strong style="color:#666;">Maps.</strong> Country outlines and island representations are simplified and schematic, for illustrative purposes only.</p>
     </div>
   `;
@@ -448,13 +448,21 @@ window.addEventListener('resize', () => {
   track.style.transition = 'none'; ui();
   requestAnimationFrame(() => { track.style.transition = 'transform 0.8s cubic-bezier(0.4,0,0.2,1)'; });
 });
-let touchStartX = 0, touchStartY = 0, touchStartTime = 0;
-widget.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; touchStartY = e.touches[0].clientY; touchStartTime = Date.now(); }, { passive:true });
+let touchStartX = 0, touchStartY = 0;
+widget.addEventListener('touchstart', e => {
+  touchStartX = e.touches[0].clientX;
+  touchStartY = e.touches[0].clientY;
+}, { passive: true });
+widget.addEventListener('touchmove', e => {
+  const dx = Math.abs(e.touches[0].clientX - touchStartX);
+  const dy = Math.abs(e.touches[0].clientY - touchStartY);
+  if (dx > dy && dx > 8) e.preventDefault();
+}, { passive: false });
 widget.addEventListener('touchend', e => {
   const dx = touchStartX - e.changedTouches[0].clientX;
   const dy = Math.abs(touchStartY - e.changedTouches[0].clientY);
-  if (Math.abs(dx) > 30 && Math.abs(dx) > dy && Math.abs(dx)/(Date.now()-touchStartTime) > 0.2) go(dx > 0 ? cur+1 : cur-1);
-}, { passive:true });
+  if (Math.abs(dx) > 40 && Math.abs(dx) > dy) go(dx > 0 ? cur + 1 : cur - 1);
+}, { passive: true });
 let acc = 0;
 widget.addEventListener('wheel', e => {
   e.preventDefault(); if (busy) return;
